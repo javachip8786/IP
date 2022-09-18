@@ -7,28 +7,28 @@
 </style>
 </head>
 <body>
-
+<div id="div_template"></div>
 <script type="text/javascript">
 
-    var w = 1024;
+    var w = 1300;
     var h = 960;
-    var linkDistance=200;
+    var linkDistance=300;
 
     var colors = d3.scale.category10();
 
     var dataset = {
 
     nodes: [
-    {name: "Adam"},
-    {name: "Bob"},
-    {name: "Carrie"},
-    {name: "Donovan"},
-    {name: "Edward"},
-    {name: "Felicity"},
-    {name: "George"},
-    {name: "Hannah"},
-    {name: "Iris"},
-    {name: "Jerry"}
+    {name: "Adam", hover:"adowgnwon"},
+    {name: "Bob", hover:"ad"},
+    {name: "Carrie", hover:"ad"},
+    {name: "Donovan", hover:"ad"},
+    {name: "Edward", hover:"ad"},
+    {name: "Felicity", hover:"ad"},
+    {name: "George", hover:"ad"},
+    {name: "Hannah",hover:"ad"},
+    {name: "Iris", hover:"ad"},
+    {name: "Jerry", hover:"ad"}
     ],
     edges: [
     {source: 0, target: 1, type : "typo"},
@@ -47,7 +47,7 @@
     ]
     };
 
- 
+    
     var svg = d3.select("body").append("svg").attr({"width":w,"height":h});
 
     var force = d3.layout.force()
@@ -75,9 +75,84 @@
       .data(dataset.nodes)
       .enter()
       .append("circle")
-      .attr({"r":15})
+      .attr({"r":27})
       .style("fill",function(d,i){return colors(i);})
       .call(force.drag)
+    //   .on("mouseover",mouseover)
+    //     .on("mousemove",mousemove)
+    //     .on("mouseleave",mouseleave);
+    //   .on("mouseover", mouseover())
+    //   .on("mouseout", mouseout())
+
+    var Tooltip = d3.select("#div_template")
+    .append("div")
+    .style("opacity", 0)
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+    
+    nodes.on("mouseover", function (d) {
+                console.log("jkl")
+                Tooltip
+      .style("opacity", 1)
+      .style("visibility","visible")
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+                console.log("end")  
+                })
+
+    var mouseover = function(d) {
+        console.log("start")
+        d3.select('#tooltip').style('opacity', 1).text("abc")
+        .transition().duration(200)
+  .style('opacity', 1).text(d)
+    // Tooltip
+    //   .style("opacity", 1)
+    // d3.select(this)
+    //   .style("stroke", "black")
+    //   .style("opacity", 1)
+  }
+  var mousemove = function(d) {
+    console.log("moveit")
+    d3.select('#tooltip')
+  .style('left', d3.event.pageX + 'px')
+  .style('top', d3.event.pageY + 'px')
+    // Tooltip
+    //   .html("The exact value of<br>this cell is: " )
+    //   .style("left", (d3.mouse(this)[0]+70) + "px")
+    //   .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    console.log("leave")
+    d3.select('#tooltip').style('opacity', 0)
+    // Tooltip
+    //   .style("opacity", 0)
+    // d3.select(this)
+    //   .style("stroke", "none")
+    //   .style("opacity", 0.8)
+  }
+    
+    nodes.on("mousemove", function(d) {
+        console.log(d.hover)
+        Tooltip.html(d.hover)
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+    })
+
+    nodes.on("mouseleave", function(d) {
+        Tooltip.style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+        console.log("leave")
+    })
+                    
 
 
     var nodelabels = svg.selectAll(".nodelabel") 
@@ -134,7 +209,9 @@
         .append('svg:path')
             .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
             .attr('fill', '#ccc')
-            .attr('stroke','#ccc');
+            .attr('stroke','#ccc')
+            
+
      
 
     force.on("tick", function(){
@@ -153,7 +230,7 @@
                   .attr("y", function(d) { return d.y; });
 
         edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
-                                           console.log(d)
+                                        //    console.log(d)
                                            return path});       
 
         edgelabels.attr('transform',function(d,i){
@@ -167,7 +244,23 @@
                 return 'rotate(0)';
                 }
         });
-    });
+    })
+    
+    // force.on('mouseover',function() {
+    //     console.log("abc")
+    //     // d3.select(dataset.nodes.name).style("visibility", "visible")
+    // })
+    // force.on('mouseout', function() {
+    //     // d3.select(dataset.nodes.name).style("visibility", "hidden")
+    // })
+    
+    // function mouseover() {
+    //     console.log("hover")
+    //     d3.select(dataset.nodes.name).style("visibility", "visible")
+    // }
+    // function mouseout() {
+    //     console.log("out")
+    // }
 
 </script>
 
